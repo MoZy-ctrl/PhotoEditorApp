@@ -1,0 +1,15 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #EEF0F4;
+  color: #1C1E23;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
