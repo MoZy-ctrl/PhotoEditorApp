@@ -20,9 +20,10 @@ def binary_filer(gray_image):
     ]
 
 def show_results(results, filename):
-    plt.figure(figsize=(4 * len(results), 4))
+    rows, cols = 2, 3
+    plt.figure(figsize=(4 * cols, 4 * rows))
     for i, (image, title) in enumerate(results):
-        plt.subplot(1, len(results), i + 1)
+        plt.subplot(rows, cols, i + 1)
         plt.imshow(image, cmap="gray")
         plt.title(title)
         plt.xticks([]), plt.yticks([])
@@ -31,13 +32,13 @@ def show_results(results, filename):
     plt.show()
 
 def main():
-    img = cv2.imread("./images/former.png")
+    img = cv2.imread("./images/sudoku.png")
     assert img is not None, "Could not read the image"
 
     gray_img = grayscale(img)
     results = binary_filer(gray_img)
     results.insert(0, (cv2.cvtColor(img, cv2.COLOR_BGR2RGB), "Original"))
-    show_results(results, "results/binary.results.former.png")
+    show_results(results, "results/binary.results.sudoku.png")
 
 if __name__ == "__main__":
     main()
