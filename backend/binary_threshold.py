@@ -37,7 +37,7 @@ def main():
     gray_img = grayscale(img)
     results = binary_filer(gray_img)
     results.insert(0, (cv2.cvtColor(img, cv2.COLOR_BGR2RGB), "Original"))
-    show_results(results, "binary.results.png")
+    show_results(results, "results/binary.results.former.png")
 
 if __name__ == "__main__":
     main()
