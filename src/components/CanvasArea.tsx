@@ -1,11 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 type CanvasAreaProps = {
   image: HTMLImageElement | null;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
 };
 
-function CanvasArea({ image }: CanvasAreaProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+function CanvasArea({ image, canvasRef }: CanvasAreaProps) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !image) return;
