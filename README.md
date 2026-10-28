@@ -13,7 +13,7 @@ A web-based photo editor built with React + TypeScript (Vite), with a Python bac
 ### 1. Clone the repository
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/MoZy-ctrl/PhotoEditorApp.git
 cd PhotoEditorApp
 ```
 
@@ -46,3 +46,19 @@ python binary_threshold.py
 ```
 
 Results are saved in `backend/results/`.
+
+## Usage
+
+1. Click **File → Open** and choose an image from your computer.
+2. The image is shown on the canvas in the middle.
+3. Pick a colour from the **Colors** panel in the sidebar.
+
+### Features
+
+| Feature | Status |
+|---|---|
+| File → Open | ✅ Done |
+| Colour palette | ✅ Done |
+| Thresholding experiment (Python) | ✅ Done |
+| File → Save | Planned |
+| Filters (Gaussian, Sobel, Binary, Otsu) in the app | Planned |
