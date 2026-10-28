@@ -12,7 +12,7 @@ def binary_filer(gray_image):
     th3 = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
     otsu_t, th4 = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     return [
-        (gray_image, "Original (grayscale)"),
+        (gray_image, "Grayscale (median blur)"),
         (th1, "Global Threshold (127)"),
         (th2, "Adaptive mean"),
         (th3, "Adaptive Gaussian"),
@@ -20,9 +20,10 @@ def binary_filer(gray_image):
     ]
 
 def show_results(results, filename):
-    plt.figure(figsize=(4 * len(results), 4))
+    rows, cols = 2, 3
+    plt.figure(figsize=(4 * cols, 4 * rows))
     for i, (image, title) in enumerate(results):
-        plt.subplot(1, len(results), i + 1)
+        plt.subplot(rows, cols, i + 1)
         plt.imshow(image, cmap="gray")
         plt.title(title)
         plt.xticks([]), plt.yticks([])
