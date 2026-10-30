@@ -1,14 +1,24 @@
 import { useRef, useState } from "react";
 import Menu from "./Menu";
 import SaveAsDialog from "./SaveAsDialog";
+import PropertiesDialog from "./PropertiesDialog";
 
 type HeaderProps = {
   onOpen: (img: HTMLImageElement) => void;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
 };
+export type ImageInfo = {
+  name: string
+  type: string
+  size: number
+  width: number
+  height: number
+}
 
 function Header({ onOpen, canvasRef }: HeaderProps) {
   const [isSaveAsOpen, setIsSaveAsOpen] = useState(false);
+  const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
+  const [imageData, setImageData] = useState<ImageInfo | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -16,9 +26,14 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
     if (!file) return;
     const img = new Image();
     img.onload = () => {
+      setImageData({
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        width: img.width,
+        height: img.height,
+      });
       onOpen(img);
-      console.log(img.width);
-      console.log(img.height);
     };
     img.src = URL.createObjectURL(file);
   }
@@ -59,6 +74,7 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
     });
   }
 
+
       
 
   return (
@@ -81,6 +97,7 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
             onClick: () => handleSave("image.png", "image/png"),
           },
           { label: "Save as", onClick: () => setIsSaveAsOpen(true) },
+          { label: "Properties", onClick: () => setIsPropertiesOpen(true)}
         ]}
       />
       <Menu 
@@ -100,6 +117,11 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
           }}
           onCancel={() => setIsSaveAsOpen(false)}
         />
+      )}
+      {isPropertiesOpen && (
+        <PropertiesDialog 
+        info={imageData}
+        onClose={() => setIsPropertiesOpen(false)}/>
       )}
     </header>
   );
