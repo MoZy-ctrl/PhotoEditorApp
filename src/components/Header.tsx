@@ -38,6 +38,29 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
     }, type);
   }
 
+    function handleTransform(operation: string) {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+      const form = new FormData()
+      form.append("file", blob, "image.png")
+
+      const response = await fetch("/api/transform/" + operation, {
+        method: "POST",
+        body: form,
+      });
+      const resultBlob = await response.blob();
+      
+      const img = new Image();
+      img.onload = () => onOpen(img);
+      img.src = URL.createObjectURL(resultBlob);
+    });
+  }
+
+      
+
   return (
     <header className="header">
       <input
@@ -58,6 +81,15 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
             onClick: () => handleSave("image.png", "image/png"),
           },
           { label: "Save as", onClick: () => setIsSaveAsOpen(true) },
+        ]}
+      />
+      <Menu 
+        label="Image"
+        items={[
+          { label: "Rotate left", onClick: () => handleTransform("rotate_left") },
+          { label: "Rotate right", onClick: () => handleTransform("rotate_right") },
+          { label: "Flip horizontal", onClick: () => handleTransform("flip_horizontal") },
+          { label: "Flip vertical", onClick: () => handleTransform("flip_vertical") },
         ]}
       />
       {isSaveAsOpen && (

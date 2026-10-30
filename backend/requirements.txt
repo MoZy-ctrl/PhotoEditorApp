@@ -1,3 +1,6 @@
    opencv-python
    numpy
    matplotlib
+   fastapi
+   uvicorn
+   python-multipart
