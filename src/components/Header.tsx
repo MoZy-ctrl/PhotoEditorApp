@@ -2,22 +2,24 @@ import { useRef, useState } from "react";
 import Menu from "./Menu";
 import SaveAsDialog from "./SaveAsDialog";
 import PropertiesDialog from "./PropertiesDialog";
+import NewDialog from "./newDialog";
 
 type HeaderProps = {
   onOpen: (img: HTMLImageElement) => void;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
 };
 export type ImageInfo = {
-  name: string
-  type: string
-  size: number
-  width: number
-  height: number
-}
+  name: string;
+  type: string;
+  size: number;
+  width: number;
+  height: number;
+};
 
 function Header({ onOpen, canvasRef }: HeaderProps) {
   const [isSaveAsOpen, setIsSaveAsOpen] = useState(false);
   const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
+  const [isNewOpen, setIsNewOpen] = useState(false);
   const [imageData, setImageData] = useState<ImageInfo | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -53,29 +55,54 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
     }, type);
   }
 
-    function handleTransform(operation: string) {
+  function handleNew(width: number, height: number, color: string) {
+    console.log("Width: " + width);
+    console.log("height: " + height);
+    console.log("color: " + color);
+
+    const tempCanvas = document.createElement("canvas");
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+
+    const ctx = tempCanvas.getContext("2d");
+    if (!ctx) return;
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, width, height);
+
+    const img = new Image();
+    img.onload = () => {
+      setImageData({
+        name: "untitled",
+        type: "image/png",
+        size: 0,
+        width: width,
+        height: height,
+      });
+      onOpen(img);
+    };
+    img.src = tempCanvas.toDataURL();
+  }
+
+  function handleTransform(operation: string) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     canvas.toBlob(async (blob) => {
       if (!blob) return;
-      const form = new FormData()
-      form.append("file", blob, "image.png")
+      const form = new FormData();
+      form.append("file", blob, "image.png");
 
       const response = await fetch("/api/transform/" + operation, {
         method: "POST",
         body: form,
       });
       const resultBlob = await response.blob();
-      
+
       const img = new Image();
       img.onload = () => onOpen(img);
       img.src = URL.createObjectURL(resultBlob);
     });
   }
-
-
-      
 
   return (
     <header className="header">
@@ -91,22 +118,36 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
       <Menu
         label="File"
         items={[
+          { label: "New", onClick: () => setIsNewOpen(true) },
           { label: "Open", onClick: () => fileInputRef.current?.click() },
           {
             label: "Save",
             onClick: () => handleSave("image.png", "image/png"),
           },
           { label: "Save as", onClick: () => setIsSaveAsOpen(true) },
-          { label: "Properties", onClick: () => setIsPropertiesOpen(true)}
+          { label: "Properties", onClick: () => setIsPropertiesOpen(true) },
+          { label: "Quit", onClick: () => console.log("Quit!") },
         ]}
       />
-      <Menu 
+      <Menu
         label="Image"
         items={[
-          { label: "Rotate left", onClick: () => handleTransform("rotate_left") },
-          { label: "Rotate right", onClick: () => handleTransform("rotate_right") },
-          { label: "Flip horizontal", onClick: () => handleTransform("flip_horizontal") },
-          { label: "Flip vertical", onClick: () => handleTransform("flip_vertical") },
+          {
+            label: "Rotate left",
+            onClick: () => handleTransform("rotate_left"),
+          },
+          {
+            label: "Rotate right",
+            onClick: () => handleTransform("rotate_right"),
+          },
+          {
+            label: "Flip horizontal",
+            onClick: () => handleTransform("flip_horizontal"),
+          },
+          {
+            label: "Flip vertical",
+            onClick: () => handleTransform("flip_vertical"),
+          },
         ]}
       />
       {isSaveAsOpen && (
@@ -119,9 +160,19 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
         />
       )}
       {isPropertiesOpen && (
-        <PropertiesDialog 
-        info={imageData}
-        onClose={() => setIsPropertiesOpen(false)}/>
+        <PropertiesDialog
+          info={imageData}
+          onClose={() => setIsPropertiesOpen(false)}
+        />
+      )}
+      {isNewOpen && (
+        <NewDialog
+          onNew={(width, height, color) => {
+            handleNew(width, height, color);
+            setIsNewOpen(false);
+          }}
+          onClose={() => setIsNewOpen(false)}
+        ></NewDialog>
       )}
     </header>
   );

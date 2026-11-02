@@ -6,7 +6,6 @@ import Sidebar from "./components/Sidebar";
 
 function App() {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
-  const [data, setData] = useState();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
