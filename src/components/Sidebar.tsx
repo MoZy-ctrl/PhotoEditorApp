@@ -1,4 +1,10 @@
-import { useState } from "react";
+type SidebarProps = {
+  onProcess: (path: string) => void;
+  color: string;
+  onColorChange: (color: string) => void;
+  brushSize: number;
+  onBrushSizeChange: (brushSize: number) => void;
+};
 
 const COLORS = [
   "#1C1E23",
@@ -11,29 +17,37 @@ const COLORS = [
   "#8A4FBF",
 ];
 
-type SidebarProps = {
-  onProcess: (path: string) => void;
-};
-
-function Sidebar({ onProcess }: SidebarProps) {
-  const [selectedColor, setSelectedColor] = useState(COLORS[2]);
-
+function Sidebar({
+  onProcess,
+  color,
+  onColorChange,
+  brushSize,
+  onBrushSizeChange,
+}: SidebarProps) {
   return (
     <aside className="sidebar">
       <section className="panel">
         <h2>Colors</h2>
         <div className="swatches">
-          {COLORS.map((color) => (
+          {COLORS.map((swatch) => (
             <button
-              key={color}
-              className={color === selectedColor ? "swatch selected" : "swatch"}
-              style={{ backgroundColor: color }}
-              onClick={() => setSelectedColor(color)}
-              aria-label={`Choose color ${color}`}
+              key={swatch}
+              className={swatch === color ? "swatch selected" : "swatch"}
+              style={{ backgroundColor: swatch }}
+              onClick={() => onColorChange(swatch)}
+              aria-label={`Choose color ${swatch}`}
             />
           ))}
         </div>
-        <p>Selected: {selectedColor}</p>
+        <p>Selected: {color}</p>
+        <input
+          type="range"
+          min={1}
+          max={50}
+          value={brushSize}
+          onChange={(e) => onBrushSizeChange(Number(e.target.value))}
+        />
+        <p>Brush size: {brushSize} px</p>
       </section>
 
       <section className="panel">

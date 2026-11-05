@@ -5,6 +5,8 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 
 function App() {
+  const [selectedColor, setSelectedColor] = useState("#E2553B");
+  const [brushSize, setBrushSize] = useState(10);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -38,8 +40,14 @@ function App() {
         canvasRef={canvasRef}
       />
       <main className="workspace">
-        <CanvasArea image={image} canvasRef={canvasRef} />
-        <Sidebar onProcess={processImage} />
+        <CanvasArea image={image} canvasRef={canvasRef} color={selectedColor} brushSize={brushSize} />
+        <Sidebar
+          onProcess={processImage}
+          color={selectedColor}
+          onColorChange={setSelectedColor}
+          brushSize={brushSize}
+          onBrushSizeChange={setBrushSize}
+        />
       </main>
     </div>
   );
