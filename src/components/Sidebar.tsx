@@ -39,6 +39,8 @@ function Sidebar({ onProcess }: SidebarProps) {
       <section className="panel">
         <h2>Filters</h2>
         <button onClick={() => onProcess("filters/binary")}>Binary</button>
+        <button onClick={() => onProcess("filters/gaussian")}>Gaussian</button>
+        <button onClick={() => onProcess("filters/sobel")}>Sobel</button>
       </section>
 
       <section className="panel">
