@@ -2,10 +2,12 @@ import { useRef, useState } from "react";
 import Menu from "./Menu";
 import SaveAsDialog from "./SaveAsDialog";
 import PropertiesDialog from "./PropertiesDialog";
-import NewDialog from "./newDialog";
+import NewDialog from "./NewDialog";
+import QuitDialog from "./QuitDialog";
 
 type HeaderProps = {
   onOpen: (img: HTMLImageElement) => void;
+  onQuit: () => void;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
 };
 export type ImageInfo = {
@@ -16,10 +18,11 @@ export type ImageInfo = {
   height: number;
 };
 
-function Header({ onOpen, canvasRef }: HeaderProps) {
+function Header({ onOpen, onQuit, canvasRef }: HeaderProps) {
   const [isSaveAsOpen, setIsSaveAsOpen] = useState(false);
   const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
   const [isNewOpen, setIsNewOpen] = useState(false);
+  const [isQuitOpen, setIsQuitOpen] = useState(false);
   const [imageData, setImageData] = useState<ImageInfo | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -126,7 +129,7 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
           },
           { label: "Save as", onClick: () => setIsSaveAsOpen(true) },
           { label: "Properties", onClick: () => setIsPropertiesOpen(true) },
-          { label: "Quit", onClick: () => console.log("Quit!") },
+          { label: "Quit", onClick: () => setIsQuitOpen(true) },
         ]}
       />
       <Menu
@@ -173,6 +176,16 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
           }}
           onClose={() => setIsNewOpen(false)}
         ></NewDialog>
+      )}
+      {isQuitOpen && (
+        <QuitDialog
+          onConfirm={() => {
+            onQuit();
+            setImageData(null);
+            setIsQuitOpen(false);
+          }}
+          onCancel={() => setIsQuitOpen(false)}
+        />
       )}
     </header>
   );

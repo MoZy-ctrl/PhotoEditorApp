@@ -19,7 +19,7 @@ function App() {
 
   return (
     <div className="app">
-      <Header onOpen={setImage} canvasRef={canvasRef} />
+      <Header onOpen={setImage} onQuit={() => setImage(null)} canvasRef={canvasRef} />
       <main className="workspace">
         <CanvasArea image={image} canvasRef={canvasRef} />
         <Sidebar />

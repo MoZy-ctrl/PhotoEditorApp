@@ -8,7 +8,12 @@ type CanvasAreaProps = {
 function CanvasArea({ image, canvasRef }: CanvasAreaProps) {
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !image) return;
+    if (!canvas) return;
+    if (!image) {
+      canvas.width = 0;
+      canvas.height = 0;
+      return;
+    } 
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
