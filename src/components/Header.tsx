@@ -1,14 +1,30 @@
 import { useRef, useState } from "react";
 import Menu from "./Menu";
 import SaveAsDialog from "./SaveAsDialog";
+import PropertiesDialog from "./PropertiesDialog";
+import NewDialog from "./NewDialog";
+import QuitDialog from "./QuitDialog";
 
 type HeaderProps = {
   onOpen: (img: HTMLImageElement) => void;
+  onQuit: () => void;
+  onProcess: (path: string) => void;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
 };
+export type ImageInfo = {
+  name: string;
+  type: string;
+  size: number;
+  width: number;
+  height: number;
+};
 
-function Header({ onOpen, canvasRef }: HeaderProps) {
+function Header({ onOpen, onQuit, onProcess, canvasRef }: HeaderProps) {
   const [isSaveAsOpen, setIsSaveAsOpen] = useState(false);
+  const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
+  const [isNewOpen, setIsNewOpen] = useState(false);
+  const [isQuitOpen, setIsQuitOpen] = useState(false);
+  const [imageData, setImageData] = useState<ImageInfo | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -16,9 +32,14 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
     if (!file) return;
     const img = new Image();
     img.onload = () => {
+      setImageData({
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        width: img.width,
+        height: img.height,
+      });
       onOpen(img);
-      console.log(img.width);
-      console.log(img.height);
     };
     img.src = URL.createObjectURL(file);
   }
@@ -38,6 +59,36 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
     }, type);
   }
 
+  function handleNew(width: number, height: number, color: string) {
+    console.log("Width: " + width);
+    console.log("height: " + height);
+    console.log("color: " + color);
+
+    const tempCanvas = document.createElement("canvas");
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+
+    const ctx = tempCanvas.getContext("2d");
+    if (!ctx) return;
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, width, height);
+
+    const img = new Image();
+    img.onload = () => {
+      setImageData({
+        name: "untitled",
+        type: "image/png",
+        size: 0,
+        width: width,
+        height: height,
+      });
+      onOpen(img);
+    };
+    img.src = tempCanvas.toDataURL();
+  }
+
+
+
   return (
     <header className="header">
       <input
@@ -52,12 +103,36 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
       <Menu
         label="File"
         items={[
+          { label: "New", onClick: () => setIsNewOpen(true) },
           { label: "Open", onClick: () => fileInputRef.current?.click() },
           {
             label: "Save",
             onClick: () => handleSave("image.png", "image/png"),
           },
           { label: "Save as", onClick: () => setIsSaveAsOpen(true) },
+          { label: "Properties", onClick: () => setIsPropertiesOpen(true) },
+          { label: "Quit", onClick: () => setIsQuitOpen(true) },
+        ]}
+      />
+      <Menu
+        label="Image"
+        items={[
+          {
+            label: "Rotate left",
+            onClick: () => onProcess("transform/rotate_left"),
+          },
+          {
+            label: "Rotate right",
+            onClick: () => onProcess("transform/rotate_right"),
+          },
+          {
+            label: "Flip horizontal",
+            onClick: () => onProcess("transform/flip_horizontal"),
+          },
+          {
+            label: "Flip vertical",
+            onClick: () => onProcess("transform/flip_vertical"),
+          },
         ]}
       />
       {isSaveAsOpen && (
@@ -67,6 +142,31 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
             setIsSaveAsOpen(false);
           }}
           onCancel={() => setIsSaveAsOpen(false)}
+        />
+      )}
+      {isPropertiesOpen && (
+        <PropertiesDialog
+          info={imageData}
+          onClose={() => setIsPropertiesOpen(false)}
+        />
+      )}
+      {isNewOpen && (
+        <NewDialog
+          onNew={(width, height, color) => {
+            handleNew(width, height, color);
+            setIsNewOpen(false);
+          }}
+          onClose={() => setIsNewOpen(false)}
+        ></NewDialog>
+      )}
+      {isQuitOpen && (
+        <QuitDialog
+          onConfirm={() => {
+            onQuit();
+            setImageData(null);
+            setIsQuitOpen(false);
+          }}
+          onCancel={() => setIsQuitOpen(false)}
         />
       )}
     </header>

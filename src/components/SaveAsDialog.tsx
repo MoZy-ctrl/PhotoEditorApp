@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../SaveAsDialog.css";
+import "../Dialog.css";
 
 type SaveAsDialogProps = {
   onSave: (filename: string, type: string) => void;

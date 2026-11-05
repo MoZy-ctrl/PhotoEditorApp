@@ -33,3 +33,23 @@
   border: 1px solid #d3d7df;
   background: #ffffff;
 }
+
+.dialog h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.dialog p {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dialog p span:first-child {
+  color: #5f6470;
+}
+
+.dialog button {
+  margin-top: 8px;
+}
