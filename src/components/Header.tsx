@@ -8,6 +8,7 @@ import QuitDialog from "./QuitDialog";
 type HeaderProps = {
   onOpen: (img: HTMLImageElement) => void;
   onQuit: () => void;
+  onProcess: (path: string) => void;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
 };
 export type ImageInfo = {
@@ -18,7 +19,7 @@ export type ImageInfo = {
   height: number;
 };
 
-function Header({ onOpen, onQuit, canvasRef }: HeaderProps) {
+function Header({ onOpen, onQuit, onProcess, canvasRef }: HeaderProps) {
   const [isSaveAsOpen, setIsSaveAsOpen] = useState(false);
   const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
   const [isNewOpen, setIsNewOpen] = useState(false);
@@ -86,26 +87,7 @@ function Header({ onOpen, onQuit, canvasRef }: HeaderProps) {
     img.src = tempCanvas.toDataURL();
   }
 
-  function handleTransform(operation: string) {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
 
-    canvas.toBlob(async (blob) => {
-      if (!blob) return;
-      const form = new FormData();
-      form.append("file", blob, "image.png");
-
-      const response = await fetch("/api/transform/" + operation, {
-        method: "POST",
-        body: form,
-      });
-      const resultBlob = await response.blob();
-
-      const img = new Image();
-      img.onload = () => onOpen(img);
-      img.src = URL.createObjectURL(resultBlob);
-    });
-  }
 
   return (
     <header className="header">
@@ -137,19 +119,19 @@ function Header({ onOpen, onQuit, canvasRef }: HeaderProps) {
         items={[
           {
             label: "Rotate left",
-            onClick: () => handleTransform("rotate_left"),
+            onClick: () => onProcess("transform/rotate_left"),
           },
           {
             label: "Rotate right",
-            onClick: () => handleTransform("rotate_right"),
+            onClick: () => onProcess("transform/rotate_right"),
           },
           {
             label: "Flip horizontal",
-            onClick: () => handleTransform("flip_horizontal"),
+            onClick: () => onProcess("transform/flip_horizontal"),
           },
           {
             label: "Flip vertical",
-            onClick: () => handleTransform("flip_vertical"),
+            onClick: () => onProcess("transform/flip_vertical"),
           },
         ]}
       />
