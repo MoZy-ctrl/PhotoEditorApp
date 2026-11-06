@@ -5,9 +5,16 @@ type CanvasAreaProps = {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   color: string;
   brushSize: number;
+  onDraw: () => void;
 };
 
-function CanvasArea({ image, canvasRef, color, brushSize }: CanvasAreaProps) {
+function CanvasArea({
+  image,
+  canvasRef,
+  color,
+  brushSize,
+  onDraw,
+}: CanvasAreaProps) {
   const isDrawing = useRef(false);
   const lastPos = useRef({ x: 0, y: 0 });
 
@@ -37,6 +44,7 @@ function CanvasArea({ image, canvasRef, color, brushSize }: CanvasAreaProps) {
   }
 
   function handleMouseDown(e: React.MouseEvent<HTMLCanvasElement>) {
+    onDraw();
     isDrawing.current = true;
     lastPos.current = getPos(e);
   }

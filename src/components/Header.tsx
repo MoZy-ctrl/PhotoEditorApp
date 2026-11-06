@@ -9,6 +9,8 @@ type HeaderProps = {
   onOpen: (img: HTMLImageElement) => void;
   onQuit: () => void;
   onProcess: (path: string) => void;
+  onUndo: () => void;
+  onRedo: () => void;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
 };
 export type ImageInfo = {
@@ -19,7 +21,7 @@ export type ImageInfo = {
   height: number;
 };
 
-function Header({ onOpen, onQuit, onProcess, canvasRef }: HeaderProps) {
+function Header({ onOpen, onQuit, onProcess, onUndo, onRedo, canvasRef }: HeaderProps) {
   const [isSaveAsOpen, setIsSaveAsOpen] = useState(false);
   const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
   const [isNewOpen, setIsNewOpen] = useState(false);
@@ -135,6 +137,8 @@ function Header({ onOpen, onQuit, onProcess, canvasRef }: HeaderProps) {
           },
         ]}
       />
+      <button onClick={onUndo}>Undo</button>
+      <button onClick={onRedo}>Redo</button>
       {isSaveAsOpen && (
         <SaveAsDialog
           onSave={(filename, type) => {
