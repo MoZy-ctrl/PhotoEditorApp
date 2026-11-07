@@ -3,6 +3,7 @@ import numpy as np
 from fastapi import FastAPI, UploadFile, HTTPException, Response
 
 import transforms
+import filters
 
 app = FastAPI()
 
@@ -11,6 +12,10 @@ operations = {
     "flip_vertical": transforms.flip_vertical,
     "rotate_right": transforms.rotate_right,
     "rotate_left": transforms.rotate_left,
+    "gaussian_blur": filters.gaussian_blur,
+    "sobel": filters.sobel,
+    "binary_threshold": filters.binary_threshold,
+    "otsu_threshold": filters.otsu_threshold
 }
 
 @app.get("/api/health")
