@@ -11,6 +11,7 @@ filter_ops = {
     "binary": filters.binary,
     "gaussian": filters.gaussian,
     "sobel": filters.sobel,
+    "otsu": filters.otsu
 }
 
 operations = {

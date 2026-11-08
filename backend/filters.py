@@ -16,3 +16,8 @@ def sobel(img):
     mag = cv2.magnitude(gx, gy)
     result = cv2.convertScaleAbs(mag)
     return cv2.cvtColor(result, cv2.COLOR_GRAY2BGR)
+
+def otsu(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, result = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    return cv2.cvtColor(result, cv2.COLOR_GRAY2BGR)

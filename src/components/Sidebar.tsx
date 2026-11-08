@@ -55,6 +55,7 @@ function Sidebar({
         <button onClick={() => onProcess("filters/binary")}>Binary</button>
         <button onClick={() => onProcess("filters/gaussian")}>Gaussian</button>
         <button onClick={() => onProcess("filters/sobel")}>Sobel</button>
+        <button onClick={() => onProcess("filters/otsu")}>Otsu</button>
       </section>
 
       <section className="panel">
