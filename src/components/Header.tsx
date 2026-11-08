@@ -96,6 +96,7 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
         method: "POST",
         body: form,
       });
+      if (!response.ok) return;
       const resultBlob = await response.blob();
 
       const img = new Image();
@@ -143,13 +144,36 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
           {
             label: "Flip horizontal",
             onClick: () => handleTransform("flip_horizontal"),
-          },
+         },
           {
             label: "Flip vertical",
             onClick: () => handleTransform("flip_vertical"),
           },
         ]}
       />
+
+      <Menu
+        label="Filters"
+        items={[
+          {
+            label: "Soft Blur",
+            onClick: () => handleTransform("gaussian_blur"),
+          },
+          {
+            label: "Edge Detect",
+            onClick: () => handleTransform("sobel"),
+          },
+          {
+            label: "Black & White",
+            onClick: () => handleTransform("binary_threshold"),
+          },
+          {
+            label: "Smart Black & White",
+            onClick: () => handleTransform("otsu_threshold"),
+          },
+        ]}
+      />
+
       {isSaveAsOpen && (
         <SaveAsDialog
           onSave={(filename, type) => {
