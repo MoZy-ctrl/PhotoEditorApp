@@ -12,7 +12,7 @@ function App() {
   const [redoStack, setRedoStack] = useState<HTMLImageElement[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  function processImage(path: string) {
+  function processImage(path: string, params?: Record<string, string | number>) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -23,10 +23,17 @@ function App() {
       const form = new FormData();
       form.append("file", blob, "image.png");
 
+      if (params) {
+        for (const [key, value] of Object.entries(params)) {
+          form.append(key, value.toString());
+        }
+      }
+
       const response = await fetch("/api/" + path, {
         method: "POST",
         body: form,
       });
+      if (!response.ok) return;
       const resultBlob = await response.blob();
 
       const img = new Image();
