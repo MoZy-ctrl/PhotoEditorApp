@@ -7,15 +7,18 @@ import filters
 
 app = FastAPI()
 
+filter_ops = {
+    "binary": filters.binary,
+    "gaussian": filters.gaussian,
+    "sobel": filters.sobel,
+    "otsu": filters.otsu
+}
+
 operations = {
     "flip_horizontal": transforms.flip_horizontal,
     "flip_vertical": transforms.flip_vertical,
     "rotate_right": transforms.rotate_right,
     "rotate_left": transforms.rotate_left,
-    "gaussian_blur": filters.gaussian_blur,
-    "sobel": filters.sobel,
-    "binary_threshold": filters.binary_threshold,
-    "otsu_threshold": filters.otsu_threshold
 }
 
 @app.get("/api/health")
@@ -30,6 +33,18 @@ async def transform(operation: str, file: UploadFile):
     func = operations.get(operation)
     if func is None:
         raise HTTPException(status_code=400, detail="Invalid operation")
+    result = func(img)
+    ok, buffer = cv2.imencode(".png", result)
+    return Response(content=buffer.tobytes(), media_type="image/png")
+
+@app.post("/api/filters/{name}")
+async def apply_filter(name: str, file: UploadFile):
+    data = await file.read()
+    arr = np.frombuffer(data, np.uint8)
+    img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+    func = filter_ops.get(name)
+    if func is None:
+        raise HTTPException(status_code=400, detail="Invalid filter")
     result = func(img)
     ok, buffer = cv2.imencode(".png", result)
     return Response(content=buffer.tobytes(), media_type="image/png")

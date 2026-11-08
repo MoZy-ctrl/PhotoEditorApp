@@ -2,10 +2,15 @@ import { useRef, useState } from "react";
 import Menu from "./Menu";
 import SaveAsDialog from "./SaveAsDialog";
 import PropertiesDialog from "./PropertiesDialog";
-import NewDialog from "./newDialog";
+import NewDialog from "./NewDialog";
+import QuitDialog from "./QuitDialog";
 
 type HeaderProps = {
   onOpen: (img: HTMLImageElement) => void;
+  onQuit: () => void;
+  onProcess: (path: string) => void;
+  onUndo: () => void;
+  onRedo: () => void;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
 };
 export type ImageInfo = {
@@ -16,10 +21,11 @@ export type ImageInfo = {
   height: number;
 };
 
-function Header({ onOpen, canvasRef }: HeaderProps) {
+function Header({ onOpen, onQuit, onProcess, onUndo, onRedo, canvasRef }: HeaderProps) {
   const [isSaveAsOpen, setIsSaveAsOpen] = useState(false);
   const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
   const [isNewOpen, setIsNewOpen] = useState(false);
+  const [isQuitOpen, setIsQuitOpen] = useState(false);
   const [imageData, setImageData] = useState<ImageInfo | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -83,27 +89,7 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
     img.src = tempCanvas.toDataURL();
   }
 
-  function handleTransform(operation: string) {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
 
-    canvas.toBlob(async (blob) => {
-      if (!blob) return;
-      const form = new FormData();
-      form.append("file", blob, "image.png");
-
-      const response = await fetch("/api/transform/" + operation, {
-        method: "POST",
-        body: form,
-      });
-      if (!response.ok) return;
-      const resultBlob = await response.blob();
-
-      const img = new Image();
-      img.onload = () => onOpen(img);
-      img.src = URL.createObjectURL(resultBlob);
-    });
-  }
 
   return (
     <header className="header">
@@ -127,7 +113,7 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
           },
           { label: "Save as", onClick: () => setIsSaveAsOpen(true) },
           { label: "Properties", onClick: () => setIsPropertiesOpen(true) },
-          { label: "Quit", onClick: () => console.log("Quit!") },
+          { label: "Quit", onClick: () => setIsQuitOpen(true) },
         ]}
       />
       <Menu
@@ -135,45 +121,24 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
         items={[
           {
             label: "Rotate left",
-            onClick: () => handleTransform("rotate_left"),
+            onClick: () => onProcess("transform/rotate_left"),
           },
           {
             label: "Rotate right",
-            onClick: () => handleTransform("rotate_right"),
+            onClick: () => onProcess("transform/rotate_right"),
           },
           {
             label: "Flip horizontal",
-            onClick: () => handleTransform("flip_horizontal"),
-         },
+            onClick: () => onProcess("transform/flip_horizontal"),
+          },
           {
             label: "Flip vertical",
-            onClick: () => handleTransform("flip_vertical"),
+            onClick: () => onProcess("transform/flip_vertical"),
           },
         ]}
       />
-
-      <Menu
-        label="Filters"
-        items={[
-          {
-            label: "Soft Blur",
-            onClick: () => handleTransform("gaussian_blur"),
-          },
-          {
-            label: "Edge Detect",
-            onClick: () => handleTransform("sobel"),
-          },
-          {
-            label: "Black & White",
-            onClick: () => handleTransform("binary_threshold"),
-          },
-          {
-            label: "Smart Black & White",
-            onClick: () => handleTransform("otsu_threshold"),
-          },
-        ]}
-      />
-
+      <button onClick={onUndo}>Undo</button>
+      <button onClick={onRedo}>Redo</button>
       {isSaveAsOpen && (
         <SaveAsDialog
           onSave={(filename, type) => {
@@ -197,6 +162,16 @@ function Header({ onOpen, canvasRef }: HeaderProps) {
           }}
           onClose={() => setIsNewOpen(false)}
         ></NewDialog>
+      )}
+      {isQuitOpen && (
+        <QuitDialog
+          onConfirm={() => {
+            onQuit();
+            setImageData(null);
+            setIsQuitOpen(false);
+          }}
+          onCancel={() => setIsQuitOpen(false)}
+        />
       )}
     </header>
   );

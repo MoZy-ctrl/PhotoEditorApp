@@ -1,28 +1,23 @@
 import cv2
 import numpy as np
 
-def _graycolor(img: np.ndarray) -> np.ndarray:
-    if img.ndim == 2:
-        return img
-    return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+def binary(img, threshold=127):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    result = np.where(gray > threshold, 255, 0).astype(np.uint8)
+    return cv2.cvtColor(result, cv2.COLOR_GRAY2BGR)
 
-def gaussian_blur(img: np.ndarray) -> np.ndarray:
-    return cv2.GaussianBlur(img, (5, 5), 0)
+def gaussian(img):
+    return cv2.GaussianBlur(img, (9, 9), 0)
 
-def sobel(img: np.ndarray) -> np.ndarray:
-    gray = _graycolor(img)
-    sobelx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=5)
-    sobely = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=5)
-    magnitude = cv2.magnitude(sobelx, sobely)
-    return cv2.normalize(magnitude, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
+def sobel(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gx = cv2.Sobel(gray, cv2.CV_64F, 1, 0)
+    gy = cv2.Sobel(gray, cv2.CV_64F, 0, 1)
+    mag = cv2.magnitude(gx, gy)
+    result = cv2.convertScaleAbs(mag)
+    return cv2.cvtColor(result, cv2.COLOR_GRAY2BGR)
 
-def binary_threshold(img: np.ndarray, thresh: int = 127) -> np.ndarray:
-    gray = _graycolor(img)
-    _, result = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
-    return result
-
-def otsu_threshold(img: np.ndarray) -> np.ndarray:
-    gray = _graycolor(img)
+def otsu(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     _, result = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    return result
-
+    return cv2.cvtColor(result, cv2.COLOR_GRAY2BGR)
