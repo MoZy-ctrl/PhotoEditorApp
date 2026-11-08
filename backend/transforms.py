@@ -23,3 +23,6 @@ RESIZING_METHODS = {
 
 def resize(img, width, height, interpolation="bilinear"):
     return cv2.resize(img, (width, height), interpolation=RESIZING_METHODS[interpolation])
+
+def crop(img, x, y, width, height):
+    return img[y:y+height, x:x+width]
