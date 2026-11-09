@@ -1,9 +1,13 @@
+import type { Tool } from "../types";
+
 type SidebarProps = {
   onProcess: (path: string) => void;
   color: string;
   onColorChange: (color: string) => void;
   brushSize: number;
   onBrushSizeChange: (brushSize: number) => void;
+  tool: Tool;
+  onToolChange: (tool: Tool) => void;
 };
 
 const COLORS = [
@@ -23,9 +27,27 @@ function Sidebar({
   onColorChange,
   brushSize,
   onBrushSizeChange,
+  tool,
+  onToolChange,
 }: SidebarProps) {
   return (
     <aside className="sidebar">
+      <section className="panel">
+        <h2>Tools</h2>
+        <button
+          className={tool === "brush" ? "selected" : ""}
+          onClick={() => onToolChange("brush")}
+        >
+          Brush
+        </button>
+        <button
+          className={tool === "select" ? "selected" : ""}
+          onClick={() => onToolChange("select")}
+        >
+          Select
+        </button>
+      </section>
+
       <section className="panel">
         <h2>Colors</h2>
         <div className="swatches">
@@ -55,6 +77,7 @@ function Sidebar({
         <button onClick={() => onProcess("filters/binary")}>Binary</button>
         <button onClick={() => onProcess("filters/gaussian")}>Gaussian</button>
         <button onClick={() => onProcess("filters/sobel")}>Sobel</button>
+        <button onClick={() => onProcess("filters/otsu")}>Otsu</button>
       </section>
 
       <section className="panel">

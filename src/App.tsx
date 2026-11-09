@@ -3,6 +3,7 @@ import "./App.css";
 import CanvasArea from "./components/CanvasArea";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
+import type { Selection, Tool } from "./types";
 
 function App() {
   const [selectedColor, setSelectedColor] = useState("#E2553B");
@@ -10,9 +11,11 @@ function App() {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [undoStack, setUndoStack] = useState<HTMLImageElement[]>([]);
   const [redoStack, setRedoStack] = useState<HTMLImageElement[]>([]);
+  const [tool, setTool] = useState<Tool>("brush");
+  const [selection, setSelection] = useState<Selection | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  function processImage(path: string) {
+  function processImage(path: string, params?: Record<string, string | number>) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -23,10 +26,17 @@ function App() {
       const form = new FormData();
       form.append("file", blob, "image.png");
 
+      if (params) {
+        for (const [key, value] of Object.entries(params)) {
+          form.append(key, value.toString());
+        }
+      }
+
       const response = await fetch("/api/" + path, {
         method: "POST",
         body: form,
       });
+      if (!response.ok) return;
       const resultBlob = await response.blob();
 
       const img = new Image();
@@ -74,6 +84,12 @@ function App() {
     setRedoStack([]);
   }
 
+  function crop() {
+    if (!selection || selection.width < 1 || selection.height < 1) return;
+    processImage("crop", selection);
+    setSelection(null);
+  }
+
   return (
     <div className="app">
       <Header
@@ -82,6 +98,7 @@ function App() {
         onProcess={processImage}
         onUndo={undo}
         onRedo={redo}
+        onCrop={crop}
         canvasRef={canvasRef}
       />
       <main className="workspace">
@@ -91,6 +108,9 @@ function App() {
           color={selectedColor}
           brushSize={brushSize}
           onDraw={pushHistory}
+          tool={tool}
+          selection={selection}
+          onSelectionChange={setSelection}
         />
         <Sidebar
           onProcess={processImage}
@@ -98,6 +118,8 @@ function App() {
           onColorChange={setSelectedColor}
           brushSize={brushSize}
           onBrushSizeChange={setBrushSize}
+          tool={tool}
+          onToolChange={setTool}
         />
       </main>
     </div>
