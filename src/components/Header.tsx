@@ -12,6 +12,7 @@ type HeaderProps = {
   onProcess: (path: string, params?: Record<string, string | number>) => void;
   onUndo: () => void;
   onRedo: () => void;
+  onCrop: () => void;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
 };
 export type ImageInfo = {
@@ -22,7 +23,7 @@ export type ImageInfo = {
   height: number;
 };
 
-function Header({ onOpen, onQuit, onProcess, onUndo, onRedo, canvasRef }: HeaderProps) {
+function Header({ onOpen, onQuit, onProcess, onUndo, onRedo, onCrop, canvasRef }: HeaderProps) {
   const [isSaveAsOpen, setIsSaveAsOpen] = useState(false);
   const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
   const [isNewOpen, setIsNewOpen] = useState(false);
@@ -140,6 +141,10 @@ function Header({ onOpen, onQuit, onProcess, onUndo, onRedo, canvasRef }: Header
           {
             label: "Resize",
             onClick: () => setIsResizeOpen(true),
+          },
+          {
+            label: "Crop",
+            onClick: () => onCrop(),
           },
         ]}
       />

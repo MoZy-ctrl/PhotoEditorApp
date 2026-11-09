@@ -85,3 +85,56 @@
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
 }
+
+.canvas-wrapper {
+    position: relative;
+    display: inline-block;
+    line-height: 0;
+}
+
+.canvas-wrapper canvas {
+    display: block;
+}
+
+.selection {
+    position: absolute;
+    box-sizing: border-box;
+    border: 2px dashed #fff;
+    outline: 2px dashed #000;
+    pointer-events: none;
+}
+
+.header {
+    position: relative;
+    z-index: 10;
+}
+
+.panel button {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.panel button:hover {
+    background: #1f3a9e;
+}
+
+.panel button:active {
+    background: #1a2e7f;
+}
+
+.panel button:focus {
+    outline: 2px solid #1f3a9e;
+    outline-offset: 2px;
+}
+
+.panel button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
