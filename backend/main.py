@@ -68,3 +68,24 @@ async def resize_image(
     result = transforms.resize(img, width, height, interpolation)
     ok, buffer = cv2.imencode(".png", result)
     return Response(content=buffer.tobytes(), media_type="image/png")
+
+@app.post("/api/crop")
+async def crop_image(
+    file: UploadFile,
+    x: int = Form(...),
+    y: int = Form(...),
+    width: int = Form(...),
+    height: int = Form(...)
+):
+    data = await file.read()
+    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+    if img is None:
+        raise HTTPException(status_code=400, detail="Invalid image file")
+
+    img_height, img_width = img.shape[:2]
+    if x < 0 or y < 0 or width < 1 or height < 1 or x + width > img_width or y + height > img_height:
+        raise HTTPException(status_code=400, detail="Crop dimensions are out of bounds")
+
+    result = transforms.crop(img, x, y, width, height)
+    ok, buffer = cv2.imencode(".png", result)
+    return Response(content=buffer.tobytes(), media_type="image/png")
