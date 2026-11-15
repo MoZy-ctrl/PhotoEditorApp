@@ -10,6 +10,7 @@ type CanvasAreaProps = {
   tool: Tool;
   selection: Selection | null;
   onSelectionChange: (selection: Selection | null) => void;
+  onColorPick: (color: string) => void;
 };
 
 function CanvasArea({
@@ -21,6 +22,7 @@ function CanvasArea({
   tool,
   selection,
   onSelectionChange,
+  onColorPick,
 }: CanvasAreaProps) {
   const isDrawing = useRef(false);
   const lastPos = useRef({ x: 0, y: 0 });
@@ -55,6 +57,17 @@ function CanvasArea({
   }
 
   function handleMouseDown(e: React.MouseEvent<HTMLCanvasElement>) {
+    if (tool === "picker") {
+      const ctx = canvasRef.current?.getContext("2d");
+      if (!ctx) return;
+      const pos = getPos(e);
+      const x = Math.min(Math.floor(pos.x), ctx.canvas.width - 1);
+const y = Math.min(Math.floor(pos.y), ctx.canvas.height - 1);
+const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+      const hex = "#" + [r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("");
+      onColorPick(hex);
+      return;
+    }
     if (tool === "select") {
       selectionStart.current = getPos(e);
       onSelectionChange(null);
@@ -105,7 +118,7 @@ function CanvasArea({
       <div className="canvas-wrapper">
       <canvas
         ref={canvasRef}
-        style={{ cursor: tool === "select" ? "crosshair" : "default" }}
+        style={{ cursor: tool === "select" || tool === "picker" ? "crosshair" : "default" }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={stopDrawing}

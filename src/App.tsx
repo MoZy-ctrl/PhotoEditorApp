@@ -15,7 +15,10 @@ function App() {
   const [selection, setSelection] = useState<Selection | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  function processImage(path: string, params?: Record<string, string | number>) {
+  function processImage(
+    path: string,
+    params?: Record<string, string | number>,
+  ) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -111,6 +114,7 @@ function App() {
           tool={tool}
           selection={selection}
           onSelectionChange={setSelection}
+          onColorPick={setSelectedColor}
         />
         <Sidebar
           onProcess={processImage}

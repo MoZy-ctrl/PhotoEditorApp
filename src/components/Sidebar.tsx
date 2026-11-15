@@ -32,27 +32,20 @@ function Sidebar({
 }: SidebarProps) {
   return (
     <aside className="sidebar">
-      <section className="panel">
-        <h2>Tools</h2>
-        <button
-          className={tool === "brush" ? "selected" : ""}
-          onClick={() => onToolChange("brush")}
-        >
-          Brush
-        </button>
-        <button
-        className={tool === "eraser" ? "selected" : ""}
-          onClick={() => onToolChange("eraser")}
+    <section className="panel">
+      <h2>Tools</h2>
+      <div className="tool-buttons">
+        {(["brush", "eraser", "select", "picker"] as Tool[]).map((t) => (
+          <button
+            key={t}
+            className={tool === t ? "selected" : ""}
+            onClick={() => onToolChange(t)}
           >
-          Eraser
-        </button>
-        <button
-          className={tool === "select" ? "selected" : ""}
-          onClick={() => onToolChange("select")}
-        >
-          Select
-        </button>
-      </section>
+            {t.charAt(0).toUpperCase() + t.slice(1)}
+          </button>
+        ))}
+      </div>
+    </section>
 
       <section className="panel">
         <h2>Colors</h2>
@@ -67,7 +60,10 @@ function Sidebar({
             />
           ))}
         </div>
-        <p>Selected: {color}</p>
+        <div className="color-preview">
+        <span style={{ backgroundColor: color }} />
+        {color}
+      </div>
         <input
           type="range"
           min={1}
