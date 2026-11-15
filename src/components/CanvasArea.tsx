@@ -84,7 +84,8 @@ function CanvasArea({
     if (!ctx) return;
 
     const pos = getPos(e);
-    ctx.strokeStyle = color;
+    const pattern = image ? ctx.createPattern(image, "no-repeat") : null;
+    ctx.strokeStyle = tool === "eraser" && pattern ? pattern : color;
     ctx.lineWidth = brushSize;
     ctx.lineCap = "round";
     ctx.beginPath();

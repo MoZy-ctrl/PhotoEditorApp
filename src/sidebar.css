@@ -1,0 +1,27 @@
+.tool-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.tool-buttons button {
+  padding: 8px 4px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #333;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.tool-buttons button:hover {
+  background: #f5f5f5;
+  border-color: #b0b0b0;
+}
+
+.tool-buttons button.selected {
+  background: #E2553B;
+  border-color: #E2553B;
+  color: #ffffff;
+}

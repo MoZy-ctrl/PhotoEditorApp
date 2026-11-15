@@ -41,6 +41,12 @@ function Sidebar({
           Brush
         </button>
         <button
+        className={tool === "eraser" ? "selected" : ""}
+          onClick={() => onToolChange("eraser")}
+          >
+          Eraser
+        </button>
+        <button
           className={tool === "select" ? "selected" : ""}
           onClick={() => onToolChange("select")}
         >
