@@ -1,12 +1,14 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
-  background: #EEF0F4;
-  color: #1C1E23;
+  background: #eef0f4;
+  color: #1c1e23;
 }
 
 button {

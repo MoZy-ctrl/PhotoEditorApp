@@ -1,0 +1,76 @@
+.tool-buttons {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.tool-buttons button {
+  padding: 8px 4px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #333;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.tool-buttons button:hover {
+  background: #f5f5f5;
+  border-color: #b0b0b0;
+}
+
+.tool-buttons button.selected {
+  background: #e2553b;
+  border-color: #e2553b;
+  color: #ffffff;
+}
+
+.tool-buttons {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.color-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.color-preview span {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.shape-buttons {
+  grid-template-columns: repeat(3, 1fr);
+  font-size: 18px;
+}
+
+.fill-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.fill-row input[type="color"] {
+  width: 32px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.hint {
+  font-size: 11px;
+  color: #888;
+  margin-top: 6px;
+}
