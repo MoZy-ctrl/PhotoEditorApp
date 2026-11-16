@@ -1,19 +1,23 @@
 :root {
-  --color-surface: #ffffff; /* paneler, header */
-  --color-background: #eef0f4; /* sidebakgrunn */
-  --color-stage: #e4e7ec; /* rundt bildet */
-  --color-border: #e1e4ea; /* kantlinjer */
+  --color-surface: #ffffff;
+  --color-background: #eef0f4;
+  --color-stage: #e4e7ec;
+  --color-border: #e1e4ea;
   --color-text: #1c1e23;
-  --color-accent: #2e4fc7; /* primærknapper */
+  --color-accent: #2e4fc7;
+  --color-brand: #e2553b;
+  --color-hover: #f0f2f7;
 }
 
 .app {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 .header {
+  position: relative;
+  z-index: 10;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -24,8 +28,58 @@
   font-size: 18px;
 }
 
+.header button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.header button:hover,
+.header .menu-button.open {
+  background: var(--color-hover);
+}
+
+.header .menu {
+  position: relative;
+}
+
+.header .menu-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 100;
+  min-width: 170px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(20, 30, 60, 0.15);
+}
+
+.header .menu-list li {
+  margin: 0;
+}
+
+.header .menu-list button {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+  white-space: nowrap;
+  border-radius: 4px;
+  font-weight: 400;
+}
+
 .workspace {
   flex: 1;
+  min-height: 0;
   display: flex;
   gap: 16px;
   padding: 16px;
@@ -35,19 +89,31 @@
   flex: 1;
   min-width: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
   padding: 24px;
   background: var(--color-stage);
   border-radius: 16px;
+  overflow: auto;
 }
 
-.canvas-area canvas {
-  max-width: 100%;
-  max-height: 70vh;
+.canvas-wrapper {
+  position: relative;
+  display: inline-block;
+  margin: auto;
+  line-height: 0;
+}
+
+.canvas-wrapper canvas {
+  display: block;
+  max-width: none;
   box-shadow: 0 8px 24px rgba(20, 30, 60, 0.2);
+}
+
+.selection {
+  position: absolute;
+  box-sizing: border-box;
+  border: 2px dashed #fff;
+  outline: 2px dashed #000;
+  pointer-events: none;
 }
 
 .sidebar {
@@ -55,6 +121,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow-y: auto;
 }
 
 .panel {
@@ -66,47 +133,6 @@
 .panel h2 {
   margin: 0 0 12px;
   font-size: 15px;
-}
-
-.swatches {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 6px;
-  padding: 2px;
-}
-
-.swatch {
-  aspect-ratio: 1;
-  border: 1px solid var(--color-border);
-  border-radius: 50%;
-}
-
-.swatch.selected {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-.canvas-wrapper {
-  position: relative;
-  display: inline-block;
-  line-height: 0;
-}
-
-.canvas-wrapper canvas {
-  display: block;
-}
-
-.selection {
-  position: absolute;
-  box-sizing: border-box;
-  border: 2px dashed #fff;
-  outline: 2px dashed #000;
-  pointer-events: none;
-}
-
-.header {
-  position: relative;
-  z-index: 10;
 }
 
 .panel button {
@@ -121,20 +147,63 @@
   cursor: pointer;
 }
 
-.panel button:hover {
-  background: #1f3a9e;
-}
-
-.panel button:active {
-  background: #1a2e7f;
-}
-
-.panel button:focus {
-  outline: 2px solid #1f3a9e;
+.panel button:focus-visible {
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
 .panel button:disabled {
   background: #ccc;
   cursor: not-allowed;
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+  padding: 2px;
+}
+
+.panel .swatch {
+  aspect-ratio: 1;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+}
+
+.panel .swatch.selected {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.sidebar .tool-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.sidebar .shape-buttons {
+  grid-template-columns: repeat(3, 1fr);
+  font-size: 18px;
+}
+
+.sidebar .tool-buttons button {
+  margin: 0;
+  padding: 8px 4px;
+  border: 1px solid #d0d0d0;
+  background: var(--color-surface);
+  color: #333;
+  font-size: 13px;
+}
+
+.sidebar .tool-buttons button:hover {
+  background: #f5f5f5;
+  border-color: #b0b0b0;
+}
+
+.sidebar .tool-buttons button.selected {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+  color: #fff;
 }

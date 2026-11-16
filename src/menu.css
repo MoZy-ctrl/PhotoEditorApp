@@ -2,6 +2,39 @@
   position: relative;
 }
 
-ul {
+.header .menu-button.open {
+  background: #f0f0f0;
+}
+
+.menu-list {
   position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 100;
+  min-width: 170px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: #ffffff;
+  border: 1px solid #e1e4ea;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(20, 30, 60, 0.15);
+}
+
+.menu-list li {
+  margin: 0;
+}
+
+.header .menu-list button {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+  white-space: nowrap;
+  border-radius: 4px;
+  font-weight: 400;
+}
+
+.header .menu-list button:hover {
+  background: #f0f2f7;
 }
