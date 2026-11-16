@@ -63,35 +63,51 @@ function CanvasArea({
     };
   }
 
-  function drawShape(ctx: CanvasRenderingContext2D, a: { x: number; y: number }, b: { x: number; y: number }) {
-  ctx.lineWidth = brushSize;
-  ctx.strokeStyle = color;
-  ctx.beginPath();
-  if (tool === "rect") {
-    ctx.rect(a.x, a.y, b.x - a.x, b.y - a.y);
-  } else if (tool === "ellipse") {
-    ctx.ellipse((a.x + b.x) / 2, (a.y + b.y) / 2, Math.abs(b.x - a.x) / 2, Math.abs(b.y - a.y) / 2, 0, 0, Math.PI * 2);
-  } else {
-    ctx.moveTo(a.x, a.y);
-    ctx.lineTo(b.x, b.y);
+  function drawShape(
+    ctx: CanvasRenderingContext2D,
+    a: { x: number; y: number },
+    b: { x: number; y: number },
+  ) {
+    ctx.lineWidth = brushSize;
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    if (tool === "rect") {
+      ctx.rect(a.x, a.y, b.x - a.x, b.y - a.y);
+    } else if (tool === "ellipse") {
+      ctx.ellipse(
+        (a.x + b.x) / 2,
+        (a.y + b.y) / 2,
+        Math.abs(b.x - a.x) / 2,
+        Math.abs(b.y - a.y) / 2,
+        0,
+        0,
+        Math.PI * 2,
+      );
+    } else {
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+    }
+    if (fillColor && tool !== "line") {
+      ctx.fillStyle = fillColor;
+      ctx.fill();
+    }
+    ctx.stroke();
   }
-  if (fillColor && tool !== "line") {
-    ctx.fillStyle = fillColor;
-    ctx.fill();
-  }
-  ctx.stroke();
-}
 
   function handleMouseDown(e: React.MouseEvent<HTMLCanvasElement>) {
-
     if (isShape) {
-  const ctx = canvasRef.current?.getContext("2d");
-  if (!ctx) return;
-  onDraw();
-  shapeStart.current = getPos(e);
-  snapshot.current = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-  return;
-}
+      const ctx = canvasRef.current?.getContext("2d");
+      if (!ctx) return;
+      onDraw();
+      shapeStart.current = getPos(e);
+      snapshot.current = ctx.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height,
+      );
+      return;
+    }
     if (tool === "picker") {
       const ctx = canvasRef.current?.getContext("2d");
       if (!ctx) return;
@@ -99,7 +115,8 @@ function CanvasArea({
       const x = Math.min(Math.floor(pos.x), ctx.canvas.width - 1);
       const y = Math.min(Math.floor(pos.y), ctx.canvas.height - 1);
       const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
-      const hex = "#" + [r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("");
+      const hex =
+        "#" + [r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("");
       onColorPick(hex);
       return;
     }
@@ -115,12 +132,12 @@ function CanvasArea({
 
   function handleMouseMove(e: React.MouseEvent<HTMLCanvasElement>) {
     if (isShape) {
-  const ctx = canvasRef.current?.getContext("2d");
-  if (!ctx || !shapeStart.current || !snapshot.current) return;
-  ctx.putImageData(snapshot.current, 0, 0);
-  drawShape(ctx, shapeStart.current, getPos(e));
-  return;
-}
+      const ctx = canvasRef.current?.getContext("2d");
+      if (!ctx || !shapeStart.current || !snapshot.current) return;
+      ctx.putImageData(snapshot.current, 0, 0);
+      drawShape(ctx, shapeStart.current, getPos(e));
+      return;
+    }
     if (tool === "select") {
       const start = selectionStart.current;
       if (!start) return;
@@ -160,28 +177,31 @@ function CanvasArea({
   return (
     <section className="canvas-area">
       <div className="canvas-wrapper">
-      <canvas
-        ref={canvasRef}
-        style={{
-  cursor: tool === "select" || tool === "picker" || isShape ? "crosshair" : "default",
-  width: image ? image.width * zoom : 0,
-}}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={stopDrawing}
-        onMouseLeave={stopDrawing}
-      />
-      {selection && image && selection.width > 0 && selection.height > 0 && (
-        <div
-          className="selection"
+        <canvas
+          ref={canvasRef}
           style={{
-            left: `${(selection.x / image.width) * 100}%`,
-            top: `${(selection.y / image.height) * 100}%`,
-            width: `${(selection.width / image.width) * 100}%`,
-            height: `${(selection.height / image.height) * 100}%`,
+            cursor:
+              tool === "select" || tool === "picker" || isShape
+                ? "crosshair"
+                : "default",
+            width: image ? image.width * zoom : 0,
           }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={stopDrawing}
+          onMouseLeave={stopDrawing}
         />
-      )}
+        {selection && image && selection.width > 0 && selection.height > 0 && (
+          <div
+            className="selection"
+            style={{
+              left: `${(selection.x / image.width) * 100}%`,
+              top: `${(selection.y / image.height) * 100}%`,
+              width: `${(selection.width / image.width) * 100}%`,
+              height: `${(selection.height / image.height) * 100}%`,
+            }}
+          />
+        )}
       </div>
     </section>
   );

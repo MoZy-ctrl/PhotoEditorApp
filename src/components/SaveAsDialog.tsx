@@ -25,7 +25,9 @@ function SaveAsDialog({ onSave, onCancel }: SaveAsDialogProps) {
           <option value="image/png">PNG</option>
           <option value="image/jpeg">JPEG</option>
         </select>
-        <button onClick={() => onSave(filename + "." + end, format)}>Save as</button>
+        <button onClick={() => onSave(filename + "." + end, format)}>
+          Save as
+        </button>
         <button onClick={onCancel}>Cancel</button>
       </section>
     </div>

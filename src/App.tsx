@@ -105,8 +105,8 @@ function App() {
         onRedo={redo}
         onCrop={crop}
         canvasRef={canvasRef}
-        onZoomIn={() => setZoom(z => Math.min(z + 0.25, 4))}
-        onZoomOut={() => setZoom(z => Math.max(z - 0.25, 0.25))}
+        onZoomIn={() => setZoom((z) => Math.min(z + 0.25, 4))}
+        onZoomOut={() => setZoom((z) => Math.max(z - 0.25, 0.25))}
       />
       <main className="workspace">
         <CanvasArea

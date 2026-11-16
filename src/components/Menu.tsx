@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../menu.css"
+import "../menu.css";
 
 type MenuItem = {
   label: string;

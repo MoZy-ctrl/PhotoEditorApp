@@ -1,140 +1,140 @@
 :root {
-  --color-surface: #FFFFFF;     /* paneler, header */
-  --color-background: #EEF0F4;  /* sidebakgrunn */
-  --color-stage: #E4E7EC;       /* rundt bildet */
-  --color-border: #E1E4EA;      /* kantlinjer */
-  --color-text: #1C1E23;
-  --color-accent: #2E4FC7;      /* primærknapper */
+  --color-surface: #ffffff; /* paneler, header */
+  --color-background: #eef0f4; /* sidebakgrunn */
+  --color-stage: #e4e7ec; /* rundt bildet */
+  --color-border: #e1e4ea; /* kantlinjer */
+  --color-text: #1c1e23;
+  --color-accent: #2e4fc7; /* primærknapper */
 }
 
 .app {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 24px;
-    background: var(--color-surface);
-    border-bottom: 1px solid var(--color-border);
-    font-weight: 700;
-    font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 700;
+  font-size: 18px;
 }
 
 .workspace {
-    flex: 1;
-    display: flex;
-    gap: 16px;
-    padding: 16px;
+  flex: 1;
+  display: flex;
+  gap: 16px;
+  padding: 16px;
 }
 
 .canvas-area {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    padding: 24px;
-    background: var(--color-stage);
-    border-radius: 16px;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+  background: var(--color-stage);
+  border-radius: 16px;
 }
 
 .canvas-area canvas {
-    max-width: 100%;
-    max-height: 70vh;
-    box-shadow: 0 8px 24px rgba(20, 30, 60, 0.2);
+  max-width: 100%;
+  max-height: 70vh;
+  box-shadow: 0 8px 24px rgba(20, 30, 60, 0.2);
 }
 
 .sidebar {
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .panel {
-    background: var(--color-surface);
-    border-radius: 14px;
-    padding: 16px;
+  background: var(--color-surface);
+  border-radius: 14px;
+  padding: 16px;
 }
 
 .panel h2 {
-    margin: 0 0 12px;
-    font-size: 15px;
+  margin: 0 0 12px;
+  font-size: 15px;
 }
 
 .swatches {
-    display:grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 6px;
-    padding: 2px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+  padding: 2px;
 }
 
 .swatch {
-    aspect-ratio: 1;
-    border: 1px solid var(--color-border);
-    border-radius: 50%;
+  aspect-ratio: 1;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
 }
 
 .swatch.selected {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .canvas-wrapper {
-    position: relative;
-    display: inline-block;
-    line-height: 0;
+  position: relative;
+  display: inline-block;
+  line-height: 0;
 }
 
 .canvas-wrapper canvas {
-    display: block;
+  display: block;
 }
 
 .selection {
-    position: absolute;
-    box-sizing: border-box;
-    border: 2px dashed #fff;
-    outline: 2px dashed #000;
-    pointer-events: none;
+  position: absolute;
+  box-sizing: border-box;
+  border: 2px dashed #fff;
+  outline: 2px dashed #000;
+  pointer-events: none;
 }
 
 .header {
-    position: relative;
-    z-index: 10;
+  position: relative;
+  z-index: 10;
 }
 
 .panel button {
-    display: block;
-    width: 100%;
-    padding: 8px 12px;
-    margin-bottom: 8px;
-    background: var(--color-accent);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 .panel button:hover {
-    background: #1f3a9e;
+  background: #1f3a9e;
 }
 
 .panel button:active {
-    background: #1a2e7f;
+  background: #1a2e7f;
 }
 
 .panel button:focus {
-    outline: 2px solid #1f3a9e;
-    outline-offset: 2px;
+  outline: 2px solid #1f3a9e;
+  outline-offset: 2px;
 }
 
 .panel button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
+  background: #ccc;
+  cursor: not-allowed;
 }

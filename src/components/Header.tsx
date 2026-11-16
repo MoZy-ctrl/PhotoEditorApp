@@ -25,7 +25,17 @@ export type ImageInfo = {
   height: number;
 };
 
-function Header({ onOpen, onQuit, onProcess, onUndo, onRedo, onCrop, canvasRef, onZoomIn, onZoomOut }: HeaderProps) {
+function Header({
+  onOpen,
+  onQuit,
+  onProcess,
+  onUndo,
+  onRedo,
+  onCrop,
+  canvasRef,
+  onZoomIn,
+  onZoomOut,
+}: HeaderProps) {
   const [isSaveAsOpen, setIsSaveAsOpen] = useState(false);
   const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
   const [isNewOpen, setIsNewOpen] = useState(false);
@@ -94,8 +104,6 @@ function Header({ onOpen, onQuit, onProcess, onUndo, onRedo, onCrop, canvasRef, 
     img.src = tempCanvas.toDataURL();
   }
 
-
-
   return (
     <header className="header">
       <input
@@ -151,12 +159,12 @@ function Header({ onOpen, onQuit, onProcess, onUndo, onRedo, onCrop, canvasRef, 
         ]}
       />
       <Menu
-      label="View"
-      items={[
-        { label: "Zoom in", onClick: onZoomIn },
-        { label: "Zoom out", onClick: onZoomOut },
-      ]}
-    />
+        label="View"
+        items={[
+          { label: "Zoom in", onClick: onZoomIn },
+          { label: "Zoom out", onClick: onZoomOut },
+        ]}
+      />
       <button onClick={onUndo}>Undo</button>
       <button onClick={onRedo}>Redo</button>
       {isSaveAsOpen && (
