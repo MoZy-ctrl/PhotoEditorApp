@@ -1,6 +1,6 @@
 # PhotoEditorApp
 
-A web-based photo editor built with React + TypeScript (Vite), with a Python backend (FastAPI) for image processing.
+A web-based photo editor built with React + TypeScript (Vite), with a Python backend (FastAPI + OpenCV/NumPy) for image processing.
 
 ## Requirements
 
@@ -63,18 +63,37 @@ Results are saved in `backend/results/`.
 
 ## Usage
 
-1. Click **File → Open** and choose an image, or **File → New** to create a blank canvas.
-2. Use the **Image** menu to rotate or flip the image.
-3. Click **File → Save** to download as PNG, or **File → Save as** to choose a name and format.
-4. Click **File → Properties** to see the image's name, size and dimensions.
+1. **File → Open** to choose an image, or **File → New** to create a blank canvas with custom size and colour.
+2. Pick a tool in the sidebar:
+   - **Brush** – draw with the selected colour and brush size
+   - **Eraser** – removes strokes and restores the image underneath
+   - **Select** – drag a rectangle, then use **Image → Crop**
+   - **Picker** – click the image to pick a colour
+   - **Shapes** – rectangle, ellipse or line, with optional fill colour
+3. **Image** menu: rotate, flip, resize and crop.
+4. **Filters** in the sidebar: Binary, Gaussian, Sobel and Otsu (processed in Python).
+5. **View → Zoom in / Zoom out** to change the display size.
+6. **Undo / Redo** in the header to step back and forth through changes.
+7. **File → Save** downloads as PNG, **File → Save as** lets you choose name and format (PNG/JPG).
+8. **File → Properties** shows the image's name, size and dimensions.
 
-### Features
+## Features
 
-| Feature | Status |
-|---|---|
-| File → New, Open, Save, Save as, Properties | ✅ Done |
-| File → Quit | In progress |
-| Image → Rotate left/right, Flip horizontal/vertical (Python) | ✅ Done |
-| Colour palette | ✅ Done |
-| Thresholding experiment (Python) | ✅ Done |
-| Filters (Gaussian, Sobel, Binary, Otsu) in the app | Planned |
+| Requirement | Feature | Status |
+|---|---|---|
+| File | New, Open, Save, Save as, Properties, Quit | ✅ Done |
+| Clipboard | Copy, Paste, Cut | ❌ Not implemented |
+| Image | Rectangular selection, Crop, Resize | ✅ Done |
+| Image | Rotate left/right, Flip horizontal/vertical (Python) | ✅ Done |
+| Image | Lasso and polygon selection | ❌ Not implemented |
+| Tools | Zoom in/out | ✅ Done |
+| Tools | Eraser, Color picker, Brush | ✅ Done |
+| Tools | Filters: Gaussian, Sobel, Binary (Python) | ✅ Done |
+| Tools | Histogram thresholding – Otsu's method (Python) | ✅ Done |
+| Tools | Textured brushes, Text box | ❌ Not implemented |
+| Shapes | Rectangle, ellipse, line, outline and fill colour | ✅ Done |
+| Colors | Colour palette, brush size | ✅ Done |
+| Extra | Undo / Redo | ✅ Done |
+| Optional | Layers, Snapchat filters | ❌ Not implemented |
+
+> Tools and colours are placed in the sidebar instead of top menus for quicker access.
