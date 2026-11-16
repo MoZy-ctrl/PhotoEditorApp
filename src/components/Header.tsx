@@ -14,6 +14,8 @@ type HeaderProps = {
   onRedo: () => void;
   onCrop: () => void;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
 };
 export type ImageInfo = {
   name: string;
@@ -23,7 +25,7 @@ export type ImageInfo = {
   height: number;
 };
 
-function Header({ onOpen, onQuit, onProcess, onUndo, onRedo, onCrop, canvasRef }: HeaderProps) {
+function Header({ onOpen, onQuit, onProcess, onUndo, onRedo, onCrop, canvasRef, onZoomIn, onZoomOut }: HeaderProps) {
   const [isSaveAsOpen, setIsSaveAsOpen] = useState(false);
   const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
   const [isNewOpen, setIsNewOpen] = useState(false);
@@ -148,6 +150,13 @@ function Header({ onOpen, onQuit, onProcess, onUndo, onRedo, onCrop, canvasRef }
           },
         ]}
       />
+      <Menu
+      label="View"
+      items={[
+        { label: "Zoom in", onClick: onZoomIn },
+        { label: "Zoom out", onClick: onZoomOut },
+      ]}
+    />
       <button onClick={onUndo}>Undo</button>
       <button onClick={onRedo}>Redo</button>
       {isSaveAsOpen && (

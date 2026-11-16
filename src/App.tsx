@@ -14,6 +14,7 @@ function App() {
   const [tool, setTool] = useState<Tool>("brush");
   const [selection, setSelection] = useState<Selection | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [zoom, setZoom] = useState(1);
 
   function processImage(
     path: string,
@@ -103,6 +104,8 @@ function App() {
         onRedo={redo}
         onCrop={crop}
         canvasRef={canvasRef}
+        onZoomIn={() => setZoom(z => Math.min(z + 0.25, 4))}
+        onZoomOut={() => setZoom(z => Math.max(z - 0.25, 0.25))}
       />
       <main className="workspace">
         <CanvasArea
@@ -115,6 +118,7 @@ function App() {
           selection={selection}
           onSelectionChange={setSelection}
           onColorPick={setSelectedColor}
+          zoom={zoom}
         />
         <Sidebar
           onProcess={processImage}

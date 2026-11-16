@@ -11,6 +11,7 @@ type CanvasAreaProps = {
   selection: Selection | null;
   onSelectionChange: (selection: Selection | null) => void;
   onColorPick: (color: string) => void;
+  zoom: number;
 };
 
 function CanvasArea({
@@ -23,6 +24,7 @@ function CanvasArea({
   selection,
   onSelectionChange,
   onColorPick,
+  zoom,
 }: CanvasAreaProps) {
   const isDrawing = useRef(false);
   const lastPos = useRef({ x: 0, y: 0 });
@@ -62,8 +64,8 @@ function CanvasArea({
       if (!ctx) return;
       const pos = getPos(e);
       const x = Math.min(Math.floor(pos.x), ctx.canvas.width - 1);
-const y = Math.min(Math.floor(pos.y), ctx.canvas.height - 1);
-const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+      const y = Math.min(Math.floor(pos.y), ctx.canvas.height - 1);
+      const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
       const hex = "#" + [r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("");
       onColorPick(hex);
       return;
@@ -118,7 +120,10 @@ const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
       <div className="canvas-wrapper">
       <canvas
         ref={canvasRef}
-        style={{ cursor: tool === "select" || tool === "picker" ? "crosshair" : "default" }}
+        style={{
+  cursor: tool === "select" || tool === "picker" ? "crosshair" : "default",
+  width: image ? image.width * zoom : 0,
+}}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={stopDrawing}
