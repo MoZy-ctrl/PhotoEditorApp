@@ -12,6 +12,7 @@ type CanvasAreaProps = {
   onSelectionChange: (selection: Selection | null) => void;
   onColorPick: (color: string) => void;
   zoom: number;
+  fillColor: string | null;
 };
 
 function CanvasArea({
@@ -25,10 +26,14 @@ function CanvasArea({
   onSelectionChange,
   onColorPick,
   zoom,
+  fillColor,
 }: CanvasAreaProps) {
   const isDrawing = useRef(false);
   const lastPos = useRef({ x: 0, y: 0 });
   const selectionStart = useRef<{ x: number; y: number } | null>(null);
+  const shapeStart = useRef<{ x: number; y: number } | null>(null);
+  const snapshot = useRef<ImageData | null>(null);
+  const isShape = tool === "rect" || tool === "ellipse" || tool === "line";
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -58,7 +63,35 @@ function CanvasArea({
     };
   }
 
+  function drawShape(ctx: CanvasRenderingContext2D, a: { x: number; y: number }, b: { x: number; y: number }) {
+  ctx.lineWidth = brushSize;
+  ctx.strokeStyle = color;
+  ctx.beginPath();
+  if (tool === "rect") {
+    ctx.rect(a.x, a.y, b.x - a.x, b.y - a.y);
+  } else if (tool === "ellipse") {
+    ctx.ellipse((a.x + b.x) / 2, (a.y + b.y) / 2, Math.abs(b.x - a.x) / 2, Math.abs(b.y - a.y) / 2, 0, 0, Math.PI * 2);
+  } else {
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+  }
+  if (fillColor && tool !== "line") {
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+  }
+  ctx.stroke();
+}
+
   function handleMouseDown(e: React.MouseEvent<HTMLCanvasElement>) {
+
+    if (isShape) {
+  const ctx = canvasRef.current?.getContext("2d");
+  if (!ctx) return;
+  onDraw();
+  shapeStart.current = getPos(e);
+  snapshot.current = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+  return;
+}
     if (tool === "picker") {
       const ctx = canvasRef.current?.getContext("2d");
       if (!ctx) return;
@@ -81,6 +114,13 @@ function CanvasArea({
   }
 
   function handleMouseMove(e: React.MouseEvent<HTMLCanvasElement>) {
+    if (isShape) {
+  const ctx = canvasRef.current?.getContext("2d");
+  if (!ctx || !shapeStart.current || !snapshot.current) return;
+  ctx.putImageData(snapshot.current, 0, 0);
+  drawShape(ctx, shapeStart.current, getPos(e));
+  return;
+}
     if (tool === "select") {
       const start = selectionStart.current;
       if (!start) return;
@@ -111,6 +151,8 @@ function CanvasArea({
   }
 
   function stopDrawing() {
+    shapeStart.current = null;
+    snapshot.current = null;
     isDrawing.current = false;
     selectionStart.current = null;
   }
@@ -121,7 +163,7 @@ function CanvasArea({
       <canvas
         ref={canvasRef}
         style={{
-  cursor: tool === "select" || tool === "picker" ? "crosshair" : "default",
+  cursor: tool === "select" || tool === "picker" || isShape ? "crosshair" : "default",
   width: image ? image.width * zoom : 0,
 }}
         onMouseDown={handleMouseDown}

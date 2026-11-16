@@ -8,6 +8,8 @@ type SidebarProps = {
   onBrushSizeChange: (brushSize: number) => void;
   tool: Tool;
   onToolChange: (tool: Tool) => void;
+  fillColor: string | null;
+  onFillColorChange: (color: string | null) => void;
 };
 
 const COLORS = [
@@ -29,6 +31,8 @@ function Sidebar({
   onBrushSizeChange,
   tool,
   onToolChange,
+  fillColor,
+  onFillColorChange,
 }: SidebarProps) {
   return (
     <aside className="sidebar">
@@ -46,7 +50,38 @@ function Sidebar({
         ))}
       </div>
     </section>
-
+    
+<section className="panel">
+  <h2>Shapes</h2>
+  <div className="tool-buttons shape-buttons">
+    {([["rect", "▭"], ["ellipse", "◯"], ["line", "╱"]] as [Tool, string][]).map(([t, icon]) => (
+      <button
+        key={t}
+        className={tool === t ? "selected" : ""}
+        onClick={() => onToolChange(t)}
+        title={t}
+      >
+        {icon}
+      </button>
+    ))}
+  </div>
+  <label className="fill-row">
+    <input
+      type="checkbox"
+      checked={fillColor !== null}
+      onChange={(e) => onFillColorChange(e.target.checked ? color : null)}
+    />
+    Fill
+    {fillColor !== null && (
+      <input
+        type="color"
+        value={fillColor}
+        onChange={(e) => onFillColorChange(e.target.value)}
+      />
+    )}
+  </label>
+  <p className="hint">Outline uses the selected colour and brush size</p>
+</section>
       <section className="panel">
         <h2>Colors</h2>
         <div className="swatches">

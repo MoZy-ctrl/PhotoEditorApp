@@ -1,4 +1,4 @@
-export type Tool = "brush" | "select" | "eraser" | "picker";
+export type Tool = "brush" | "select" | "eraser" | "picker" | "rect" | "ellipse" | "line";
 
 export type Selection = {
     x: number;

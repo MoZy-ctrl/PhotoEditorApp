@@ -15,6 +15,7 @@ function App() {
   const [selection, setSelection] = useState<Selection | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [zoom, setZoom] = useState(1);
+  const [fillColor, setFillColor] = useState<string | null>(null);
 
   function processImage(
     path: string,
@@ -119,6 +120,7 @@ function App() {
           onSelectionChange={setSelection}
           onColorPick={setSelectedColor}
           zoom={zoom}
+          fillColor={fillColor}
         />
         <Sidebar
           onProcess={processImage}
@@ -128,6 +130,8 @@ function App() {
           onBrushSizeChange={setBrushSize}
           tool={tool}
           onToolChange={setTool}
+          fillColor={fillColor}
+          onFillColorChange={setFillColor}
         />
       </main>
     </div>
