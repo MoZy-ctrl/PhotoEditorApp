@@ -117,14 +117,14 @@ function Sidebar({
 
       <section className="panel">
         <h2>Filters</h2>
-        <button onClick={() => onProcess("filters/binary")}>Binary</button>
-        <button onClick={() => onProcess("filters/gaussian")}>Gaussian</button>
-        <button onClick={() => onProcess("filters/sobel")}>Sobel</button>
-        <button onClick={() => onProcess("filters/otsu")}>Otsu</button>
-      </section>
-
-      <section className="panel">
-        <h2>Layers</h2>
+        <div className="tool-buttons">
+          <button onClick={() => onProcess("filters/binary")}>Binary</button>
+          <button onClick={() => onProcess("filters/otsu")}>Otsu</button>
+          <button onClick={() => onProcess("filters/gaussian")}>
+            Gaussian
+          </button>
+          <button onClick={() => onProcess("filters/sobel")}>Sobel</button>
+        </div>
       </section>
     </aside>
   );
